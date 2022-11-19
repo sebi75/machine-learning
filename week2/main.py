@@ -115,6 +115,17 @@ def main():
                                                                 num_of_iterations,
                                                                 alpha)
 
+    fig, (ax1, ax2) = plt.subplots(1, 2, constrained_layout=True, figsize=(12, 4))
+    ax1.plot(cost_functions_list)
+    ax2.plot(100 + np.arange(len(cost_functions_list[100000:])), cost_functions_list[100000:])
+    ax1.set_title("Cost vs. iteration");
+    ax2.set_title("Cost vs. iteration (tail)")
+    ax1.set_ylabel('Cost');
+    ax2.set_ylabel('Cost')
+    ax1.set_xlabel('iteration step');
+    ax2.set_xlabel('iteration step')
+    plt.show()
+
     print(f"costs history: {cost_functions_list}")
 
     sample_input_for_prediction = np.array([7, 4, 2, 17])
