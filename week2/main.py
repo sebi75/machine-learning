@@ -1,27 +1,11 @@
 import copy
-
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from statistics import mean
+from cost_function import cost_function
+from calculate_accuracy import calculate_f_wb, calculate_accuracy
 
 np.set_printoptions(precision=2)
-
-
-def cost_function(x_train, y_train, w, b):
-    # for multiple input data we need to use dot product for the computation
-    # f_wb formula:
-    # one feature: f_wb = w * x_train[i] + b
-    # multiple features: f_wb = np.dot(x_train[i], w) + b, x_train[i] and w are vectors
-    # formula: 1/2m * (sum(i) 0 -> m - 1 ( f_wb - y_train[i] ) ** 2)
-    m = len(x_train)
-    cost = 0
-    for i in range(m):
-        f_wb = np.dot(x_train[i], w) + b
-        cost += (f_wb - y_train[i]) ** 2
-
-    cost = cost / (2 * m)
-    return np.squeeze(cost)
 
 
 def compute_gradient(x_train, y_train, w, b):
@@ -196,34 +180,6 @@ def plot_data(x_train, y_train, tmp_f_wb=None):
     plt.scatter(x_train, y_train, marker='x', c='r', label='Actual Values')
     plt.title("Housing prices")
     plt.show()
-
-
-def calculate_f_wb(inp, w, b):
-    return np.dot(w, inp) + b
-
-
-def calculate_accuracy(x_train, y_train, w, b):
-    # we use this function to calculate the MSE
-    errors = []
-    for i in range(x_train.shape[0]):
-        prediction = calculate_f_wb(x_train[i], w, b)
-        errors.append((prediction - y_train[i]) ** 2)
-
-    mse = math.sqrt(mean(errors))
-    return f"MSE: {mse} (in 1000s of dollars)"
-
-
-def run_gradient_descent_feng(X, y, iterations=1000, alpha=1e-6):
-    m, n = X.shape
-    # initialize parameters
-    initial_w = np.zeros(n)
-    initial_b = 0
-    # run gradient descent
-    w_out, b_out, hist_out = gradient_descent(X, y, initial_w, initial_b,
-                                              cost_function, compute_gradient, alpha, iterations)
-    print(f"w,b found by gradient descent: w: {w_out}, b: {b_out:0.4f}")
-
-    return (w_out, b_out)
 
 
 def main():

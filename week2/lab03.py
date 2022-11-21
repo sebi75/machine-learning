@@ -1,31 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from main import run_gradient_descent, cost_function
+from zscore_normalization import zscore_normalize_features
 
 np.set_printoptions(precision=2)
 plt.style.use("./datascience.mplstyle")
-
-
-def zscore_normalize_features(x_train):
-    """
-    computes  X, zcore normalized by column
-
-    Args:
-      x_train (ndarray (m,n))     : input data, m examples, n features
-
-    Returns:
-      X_norm (ndarray (m,n)): input normalized by column
-      mu (ndarray (n,))     : mean of each feature
-      sigma (ndarray (n,))  : standard deviation of each feature
-    """
-    # find the mean of each column/feature
-    mu = np.mean(x_train, axis=0)  # mu will have shape (n,)
-    # find the standard deviation of each column/feature
-    sigma = np.std(x_train, axis=0)  # sigma will have shape (n,)
-    # element-wise, subtract mu for that column from each example, divide by std for that column
-    x_norm = (x_train - mu) / sigma
-
-    return x_norm, mu, sigma
 
 
 def plot_cost_i_w(X, y, hist):
