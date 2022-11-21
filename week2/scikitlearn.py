@@ -70,7 +70,7 @@ def main():
     print(f"Prediction on training set:\n{y_pred[:4]}")
     print(f"Target values \n{y_train[:4]}")
 
-    plot_results(x_train, x_features, y_train, y_pred, )
+    plot_results(x_train, x_features, y_train, y_pred)
 
 
 if __name__ == "__main__":
