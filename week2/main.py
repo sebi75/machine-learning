@@ -67,6 +67,62 @@ def compute_gradient(x_train, y_train, w, b):
 #     return w, b, cost_functions_list, w_and_b_pairs
 
 
+def gradient_descent(X, y, w_in, b_in, cost_function, gradient_function, alpha, num_iters):
+    """
+    Performs batch gradient descent to learn theta. Updates theta by taking
+    num_iters gradient steps with learning rate alpha
+
+    Args:
+      X : (array_like Shape (m,n)    matrix of examples
+      y : (array_like Shape (m,))    target value of each example
+      w_in : (array_like Shape (n,)) Initial values of parameters of the model
+      b_in : (scalar)                Initial value of parameter of the model
+      cost_function: function to compute cost
+      gradient_function: function to compute the gradient
+      alpha : (float) Learning rate
+      num_iters : (int) number of iterations to run gradient descent
+    Returns
+      w : (array_like Shape (n,)) Updated values of parameters of the model after
+          running gradient descent
+      b : (scalar)                Updated value of parameter of the model after
+          running gradient descent
+    """
+
+    # number of training examples
+    m = len(X)
+
+    # An array to store values at each iteration primarily for graphing later
+    hist = {}
+    hist["cost"] = []; hist["params"] = []; hist["grads"] = []; hist["iter"] = [];
+
+    w = copy.deepcopy(w_in)  # avoid modifying global w within function
+    b = b_in
+    save_interval = np.ceil(num_iters / 10000)  # prevent resource exhaustion for long runs
+
+    for i in range(num_iters):
+
+        # Calculate the gradient and update the parameters
+        dj_db, dj_dw = gradient_function(X, y, w, b)
+
+        # Update Parameters using w, b, alpha and gradient
+        w = w - alpha * dj_dw
+        b = b - alpha * dj_db
+
+        # Save cost J,w,b at each save interval for graphing
+        if i == 0 or i % save_interval == 0:
+            hist["cost"].append(cost_function(X, y, w, b))
+            hist["params"].append([w, b])
+            hist["grads"].append([dj_dw, dj_db])
+            hist["iter"].append(i)
+
+        # Print cost every at intervals 10 times or as many iterations if < 10
+        if i % math.ceil(num_iters / 10) == 0:
+            # print(f"Iteration {i:4d}: Cost {cost_function(X, y, w, b):8.2f}   ")
+            cst = cost_function(X, y, w, b)
+            print(f"Iteration {i:9d}, Cost: {cst:0.5e}")
+    return w, b, hist  # return w,b and history for graphing
+
+
 def gradient_descent_houses(x_train, y_train, initial_w, initial_b, compute_gradient_matrix, alpha, iterations):
     """
     :param x_train: array like shape (m. n) matrix of examples
@@ -155,6 +211,19 @@ def calculate_accuracy(x_train, y_train, w, b):
 
     mse = math.sqrt(mean(errors))
     return f"MSE: {mse} (in 1000s of dollars)"
+
+
+def run_gradient_descent_feng(X, y, iterations=1000, alpha=1e-6):
+    m, n = X.shape
+    # initialize parameters
+    initial_w = np.zeros(n)
+    initial_b = 0
+    # run gradient descent
+    w_out, b_out, hist_out = gradient_descent(X, y, initial_w, initial_b,
+                                              cost_function, compute_gradient, alpha, iterations)
+    print(f"w,b found by gradient descent: w: {w_out}, b: {b_out:0.4f}")
+
+    return (w_out, b_out)
 
 
 def main():
